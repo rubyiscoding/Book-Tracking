@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/pinkzen/Book Tracking/BookTracker/BookTracker.csproj": {}
+    "/Users/pinkzen/BookTracking/BookTracker/BookTracker.csproj": {}
   },
   "projects": {
-    "/Users/pinkzen/Book Tracking/BookTracker/BookTracker.csproj": {
+    "/Users/pinkzen/BookTracking/BookTracker/BookTracker.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/pinkzen/Book Tracking/BookTracker/BookTracker.csproj",
+        "projectUniqueName": "/Users/pinkzen/BookTracking/BookTracker/BookTracker.csproj",
         "projectName": "BookTracker",
-        "projectPath": "/Users/pinkzen/Book Tracking/BookTracker/BookTracker.csproj",
+        "projectPath": "/Users/pinkzen/BookTracking/BookTracker/BookTracker.csproj",
         "packagesPath": "/Users/pinkzen/.nuget/packages/",
-        "outputPath": "/Users/pinkzen/Book Tracking/BookTracker/obj/",
+        "outputPath": "/Users/pinkzen/BookTracking/BookTracker/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/pinkzen/.nuget/NuGet/NuGet.Config"
@@ -49,6 +49,10 @@
               "target": "Package",
               "version": "[6.0.19, )"
             },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.19, )"
+            },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[6.0.19, )"
@@ -58,6 +62,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.19, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             }
           },
           "imports": [
