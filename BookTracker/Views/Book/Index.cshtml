@@ -1,21 +1,9 @@
-@model IEnumerable<BookTracker.Entities.Book>
+@model IEnumerable<BookTracker.Models.SearchBookViewModel>
 
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary btn-sm" style="text-transform: uppercase;">Log a book to track</a>
 </p>
-<table class="table">
+<table class="table table-responsive table-condensed table-striped">
     <thead>
         <tr>
             <th>
@@ -36,7 +24,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th></th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -61,13 +49,33 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <ul class="" style="list-style-type:none;">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa-fw fa fa-ellipsis-v"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-left">
+                            <li>
+                                <a href="@Url.Action("EditBook", "Book", new { id = item.Id })">
+                                    <i class="fa fa-fw fa-edit" style="color:green;"></i>
+                                    <span>Edit</span>
+                                </a>
+                            </li>
+                            <li>
+                                 <a href="@Url.Action("DeleteBook", "Book", new { id = item.Id })">
+                                        <i class="fa fa-fw fa-trash" style="color:red;"></i>
+                                        <span>Delete</span>
+                                 </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                @*<ul class="">
+                    <li> <a asp-action="EditBook" asp-route-id="@item.Id">Edit</a></li>
+                    <li><a asp-action="Details" asp-route-id="@item.Id">Details</a></li>
+                    <li> <a asp-action="Delete" asp-route-id="@item.Id">Delete</a></li>
+                </ul>*@
             </td>
         </tr>
 }
     </tbody>
 </table>
-</body>
-</html>
+

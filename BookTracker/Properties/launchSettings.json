@@ -36,7 +36,7 @@
     "BookTracker": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:62141;http://localhost:64988",
+      "applicationUrl": "https://localhost:64634;http://localhost:33851",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

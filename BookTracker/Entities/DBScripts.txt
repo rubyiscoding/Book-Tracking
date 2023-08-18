@@ -1,0 +1,8 @@
+﻿
+Insert into CategoryTypes ("Name")
+values ("Classic Literature"), ("Fantasy"), ("Thriller")
+
+Insert into Categories ("CategoryTypeId", "NameToken", "Description")
+values (3, "Fiction", "Classic literature fiction")
+, (4, "Thriller", "Fantasy thriller")
+,(5, "Drama", "Thriller drama")

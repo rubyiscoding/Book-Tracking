@@ -277,6 +277,7 @@
 /Users/pinkzen/Book Tracking/BookTracker/obj/Debug/net6.0/ref/BookTracker.dll
 /Users/pinkzen/BookTracking/BookTracker/bin/Debug/net6.0/appsettings.Development.json
 /Users/pinkzen/BookTracking/BookTracker/bin/Debug/net6.0/appsettings.json
+/Users/pinkzen/BookTracking/BookTracker/bin/Debug/net6.0/libman.json
 /Users/pinkzen/BookTracking/BookTracker/bin/Debug/net6.0/BookTracker.staticwebassets.runtime.json
 /Users/pinkzen/BookTracking/BookTracker/bin/Debug/net6.0/BookTracker
 /Users/pinkzen/BookTracking/BookTracker/bin/Debug/net6.0/BookTracker.deps.json

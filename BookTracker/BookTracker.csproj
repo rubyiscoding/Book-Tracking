@@ -25,8 +25,12 @@
 
   <ItemGroup>
     <Folder Include="Views/" />
+    <Folder Include="Managers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Managers\" />
+  </ItemGroup>
 </Project>
 
 
