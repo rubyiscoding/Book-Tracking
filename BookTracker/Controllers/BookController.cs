@@ -29,6 +29,8 @@ namespace BookTracker.Controllers
         }
 
         // GET: Book
+        // Returns List of all Tracked Books in a List UI asynchrnously.
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var model =
@@ -45,13 +47,11 @@ namespace BookTracker.Controllers
                  LastUpdatedDate = book.LastUpdatedDate.ToShortDateString(),
                  Status = book.Status
              }).ToListAsync();
-
-
             return View(model);
         }
 
-
-        [HttpGet]
+        // Get method for creating Book asynchronously.
+        [HttpGet]    
         public async Task<IActionResult> Create()
         {
             var model = new AddEditBookViewModel();
@@ -74,6 +74,8 @@ namespace BookTracker.Controllers
             }
         }
 
+        //Creates a new book asynchronously.
+        //Takes in a viewmodel, creates book object by mapping model values and then updates db table.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddEditBookViewModel model)
@@ -114,6 +116,8 @@ namespace BookTracker.Controllers
             return View(model);
         }
 
+        //GET : Book/Edit/1
+        //Get method for editting a book with id as a param
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -155,6 +159,9 @@ namespace BookTracker.Controllers
         }
 
         // POST: Book/Edit/5
+        // Posts /updates the book info into db 
+        // finds the book with id param
+        // maps the viewmodel value into book and then updates the book entity
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -200,6 +207,7 @@ namespace BookTracker.Controllers
 
 
         // GET: Book/Details/5
+        // Gets the details for the book with id param asynchronously
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -232,12 +240,13 @@ namespace BookTracker.Controllers
         }
 
         // GET: Book/Delete/5
+        // Returns view for deleting a book with id param
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
+            if (id == null)            
                 return NotFound();
-            }
+            
 
             var model =
          await (from book in _context.Books
@@ -280,7 +289,7 @@ namespace BookTracker.Controllers
         }
 
 
-
+        // Returns the selectlistitem for a category, will be used as a dropdownlist in the UI
         private async Task<IEnumerable<SelectListItem>> CategorySelectListAsync()
         {
             var categorySelectListItems = new List<SelectListItem>();
