@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookTracker.Data;
 using BookTracker.Entities;
+using BookTracker.Models;
 
 namespace BookTracker.Controllers
 {
@@ -44,9 +45,24 @@ namespace BookTracker.Controllers
         }
 
         // GET: Category/Create
-        public IActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var model = new AddEditCategoryViewModel();
+            try
+            {
+                var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
+                
+                model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
+                
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                //TODO Do something with ex
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Category/Create
@@ -54,15 +70,22 @@ namespace BookTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryTypeId,NameToken,Description")] Category category)
+        public async Task<IActionResult> Create(AddEditCategoryViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+            var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
+
+            model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
+
+            
+                var category = new Category { NameToken= model.Name, Description= model.Description, CategoryTypeId= model.CategoryTypeId };
                 _context.Add(category);
-                await _context.SaveChangesAsync();
+                var response = await _context.SaveChangesAsync();
+            if (response != null)
+            {
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+              
+            return View(model);
         }
 
         // GET: Category/Edit/5
@@ -78,7 +101,17 @@ namespace BookTracker.Controllers
             {
                 return NotFound();
             }
-            return View(category);
+
+            var model = new AddEditCategoryViewModel();
+            var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
+
+            model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
+            model.Id = id.Value;
+            model.Name = category.NameToken;
+            model.Description = category.Description;
+            model.CategoryTypeId = category.CategoryTypeId;
+
+            return View(model);
         }
 
         // POST: Category/Edit/5
@@ -86,34 +119,31 @@ namespace BookTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryTypeId,NameToken,Description")] Category category)
+        public async Task<IActionResult> Edit(AddEditCategoryViewModel model)
+         
         {
-            if (id != category.Id)
+            if (model.Id == null)
             {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
             }
-            return View(category);
+            var editCategory = await _context.Categories.FindAsync(model.Id);
+            if (editCategory == null)
+                return NotFound();
+
+            var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
+
+            model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
+
+                editCategory.NameToken = model.Name;
+                editCategory.Description = model.Description;
+                editCategory.CategoryTypeId = model.CategoryTypeId;
+
+            _context.Update(editCategory);
+            await _context.SaveChangesAsync();
+
+            return View(model);
         }
 
         // GET: Category/Delete/5
@@ -124,14 +154,25 @@ namespace BookTracker.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            var model =
+         await (from category in _context.Categories
+                join categoryType in _context.CategoryTypes on category.CategoryTypeId equals categoryType.Id
+                where category.Id == id.Value
+                select new SearchCategoryViewModel
+                {
+                    Id = category.Id,
+                    Name = category.NameToken,
+                    Description = category.Description,
+                    CategoryTypeName = categoryType.Name
+                }).FirstOrDefaultAsync();
+
+           
+            if (model == null)
             {
                 return NotFound();
             }
-
-            return View(category);
+          
+            return View(model);
         }
 
         // POST: Category/Delete/5
@@ -190,5 +231,37 @@ namespace BookTracker.Controllers
         }
 
         #endregion
+
+
+        private async Task<IEnumerable<SelectListItem>> CategoryTypeSelectListAsync()
+        {
+            var categoryTypeSelectListItems = new List<SelectListItem>();
+            try
+            {
+                var categoryTypes = await _context.CategoryTypes.ToListAsync();
+
+                if (categoryTypes == null) return categoryTypeSelectListItems;
+
+                foreach (var item in categoryTypes)
+                {
+                    categoryTypeSelectListItems.Add(new SelectListItem
+                    {
+                        Text = item.Name,
+                        Value = item.Id.ToString()
+                    });
+                }
+                return categoryTypeSelectListItems;
+
+            }
+            catch (Exception ex)
+            {
+                var sth = ex.Message;
+                Console.WriteLine(ex.Message); //TODO do sth with exception, either log or something.  
+                return categoryTypeSelectListItems;
+            }
+        }
+
+
+
     }
 }

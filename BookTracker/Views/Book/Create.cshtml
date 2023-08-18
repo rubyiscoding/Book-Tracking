@@ -1,22 +1,8 @@
 @*@model BookTracker.Entities.Book*@
 @model BookTracker.Models.AddEditBookViewModel
-@{
-    var title = ""; var button = ""; var actionName = "";
-    if (Model.Id == null)
-    {
-        title = "Create New";
-        button = "Create";
-        actionName = "Create";
-    }
-    else
-    {
-        title = "Edit";
-        button = "Update";
-        actionName = "Edit";
-    }
-}
 
-@using (Html.BeginForm(actionName, "Book", FormMethod.Post))
+
+@using (Html.BeginForm("Create", "Book", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -29,13 +15,15 @@
             </span>
         </a>
         <h4 class="text-center">
-            @title @(Model.Id != null ? Model.Title: "")
+            Create @(Model.Id != null ? Model.Title: "")
             Boook Information
         </h4>
     </div>
     <hr />
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => Model.BookStatus)
 
     <div class="form-group">
         <label asp-for="ISBN" class="control-label"></label>
@@ -56,12 +44,8 @@
     <div class="form-group">
         <label asp-for="CategoryId" class="control-label"></label>
         <div>
-            @*@Html.DropDownListFor(p => p.CategoryId,
-        new SelectList(Enumerable.Empty<SelectListItem>(), "CategoryId", "CategoryName"),
-        "Please select a Category",
-        new { @class = "form-control" })*@
-
-            @Html.DropDownListFor(p => p.CategoryId,Model.CategorySelectList,"Please select a Category",
+           
+            @Html.DropDownListFor(p => p.CategoryId, Model.CategorySelectList,"Please select a Category",
                      new { @class = "form-control" })
 
             @Html.ValidationMessageFor(m => m.CategoryId, "",
@@ -69,7 +53,7 @@
         </div>
     </div>
     <div class="form-group mt-4">
-        <input type="submit" value="@button" class="btn btn-success" />
+        <input type="submit" value="Create" class="btn btn-success" />
     </div>
 </div>
    

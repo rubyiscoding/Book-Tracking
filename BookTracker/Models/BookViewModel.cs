@@ -11,6 +11,7 @@ namespace BookTracker.Models
 {
     public class SearchBookViewModel
     {
+
         public int Id { get; set; }
 
         public string ISBN { get; set; }
@@ -27,6 +28,7 @@ namespace BookTracker.Models
 
         public string Status { get; set; } //started reading, in progress, completed, got bored and quit
 
+        [Display(Name = "Category")]
         public string CategoryName { get; set; }
     }
 
@@ -59,6 +61,14 @@ namespace BookTracker.Models
         public DateTime LastUpdatedDate { get; set; }
 
         public TrackingStatus Status { get; set; }
+
+        [Required(ErrorMessage = "Book Status is required.", AllowEmptyStrings = false)]
+        [Display(Name = "Select Book Status")]
+        public string BookStatus { get; set; }
+
+        public IEnumerable<SelectListItem> BookStatusSelectListItems { get; set; }
+
+
     }
     public enum TrackingStatus
     {

@@ -47,84 +47,111 @@ namespace BookTracker.Controllers
              }).ToListAsync();
 
 
-
-            //var books = await _context.Books.ToListAsync();
-            //var model = new List <SearchBookViewModel>();
-            //if (books != null && books.Count()>0)
-            //{
-            //    foreach (var book in books)
-            //    {
-            //        model.Add(new SearchBookViewModel
-            //        {
-            //            Id = book.Id,
-            //            CategoryName = book.CategoryId.ToString(),
-            //            ISBN = book.ISBN,
-            //            Title = book.Title,
-            //            Author = book.Author,
-            //            CreatedDate = book.CreatedDate.ToShortDateString(),
-            //            LastUpdatedDate = book.LastUpdatedDate.ToShortDateString(),
-            //            Status = book.Status
-            //        });
-            //    }
-            //}
-
             return View(model);
         }
 
-        // GET: Book/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            if (id == null)
+            var model = new AddEditBookViewModel();
+            try
             {
-                return NotFound();
+                var bookCategorySelectListItems = await CategorySelectListAsync();
+                var bookStatusSelectListItems = GetBookStatusSelectList();
+                model.CategorySelectList = bookCategorySelectListItems;
+                model.BookStatusSelectListItems = bookStatusSelectListItems;
+                model.CreatedDate = DateTime.Now;
+                model.LastUpdatedDate = DateTime.Now;
+                model.BookStatus = GetEnumDescription(TrackingStatus.Started);
+                return View(model);
             }
-
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
+                //TODO Do something with ex
 
-            return View(book);
+                return RedirectToAction(nameof(Index));
+            }
         }
 
-        // GET: Book/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(AddEditBookViewModel model)
+        {
+            //model.CategorySelectList = await _categoryManager.GetBookCategorySelectListItemsAsync();
+            model.CategorySelectList = await CategorySelectListAsync();
+            //if (ModelState.IsValid)
+            //{
+            var book = new Book
+            {
+                ISBN = model.ISBN,
+                Author = model.Author,
+                CategoryId = model.CategoryId,
+                Title = model.Title,
+                CreatedDate = DateTime.Now,
+                LastUpdatedDate = DateTime.Now,
+                Status = model.BookStatus,// GetEnumDescription(TrackingStatus.Started)// set to Started by Default when you create book
+            };
+            //TODO The below method could be extracted into a new class Book Manager. Implement this once you learn inecting context into class.
 
-        // POST: Book/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,CategoryId,ISBN,Title,Author,CreatedDate,LastUpdatedDate,Status")] Book book)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(book);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(book);
-        //}
+            //var response = await _bookManager.InsertAsync(book);
+            //if (response)
+            try
+            {
+                _context.Add(book);
+                var sth = book;
+                var response = await _context.SaveChangesAsync();
+                if (response != null)
+                    return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                var sth = ex.Message;
+            }
+            //return RedirectToAction(nameof(Index));
+            //else 
+            //}
+            return View(model);
+        }
 
-        // GET: Book/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
+
 
             var book = await _context.Books.FindAsync(id);
             if (book == null)
-            {
                 return NotFound();
+
+            var model = new AddEditBookViewModel();
+
+            // build up book status enum DDL            
+            var bookCategorySelectListItems = await CategorySelectListAsync();
+
+            try
+            {
+
+                model.CategorySelectList = bookCategorySelectListItems;
+                model.BookStatusSelectListItems = GetBookStatusSelectList();
+                model.Id = book.Id;
+                model.ISBN = book.ISBN;
+                model.Author = book.Author;
+                model.Title = book.Title;
+                model.BookStatus = book.Status;// TrackingStatus.Started;//TODO book.Status huna parcha . 
+                model.CreatedDate = book.CreatedDate;
+                model.LastUpdatedDate = book.LastUpdatedDate;
+                model.CategoryId = book.CategoryId;
+
+                return View("Edit", model);
             }
-            return View(book);
+            catch (Exception ex)
+            {
+                //TODO Do something with ex
+
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Book/Edit/5
@@ -132,23 +159,32 @@ namespace BookTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryId,ISBN,Title,Author,CreatedDate,LastUpdatedDate,Status")] Book book)
+        public async Task<IActionResult> Edit(AddEditBookViewModel model)
         {
-            if (id != book.Id)
-            {
+            if (model.Id == null)
                 return NotFound();
-            }
+
+            var editBook = await _context.Books.FindAsync(model.Id);
+            if (editBook == null)
+                return NotFound();
+
+            model.CategorySelectList = await CategorySelectListAsync();
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
-                    _context.Update(book);
+                    editBook.LastUpdatedDate = DateTime.Now;
+                    editBook.Status = model.Status.ToString();
+
+                    _context.Update(editBook);
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(book.Id))
+                    if (!BookExists(editBook.Id))
                     {
                         return NotFound();
                     }
@@ -159,7 +195,40 @@ namespace BookTracker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(book);
+            return View("Edit", model);
+        }
+
+
+        // GET: Book/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var model =
+         await (from book in _context.Books
+                join category in _context.Categories on book.CategoryId equals category.Id
+                where book.Id == id.Value
+                select new SearchBookViewModel
+                {
+                    Id = book.Id,
+                    CategoryName = category.NameToken,
+                    ISBN = book.ISBN,
+                    Title = book.Title,
+                    Author = book.Author,
+                    CreatedDate = book.CreatedDate.ToShortDateString(),
+                    LastUpdatedDate = book.LastUpdatedDate.ToShortDateString(),
+                    Status = book.Status
+                }).FirstOrDefaultAsync();
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+            
+            return View(model);
         }
 
         // GET: Book/Delete/5
@@ -170,14 +239,28 @@ namespace BookTracker.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
+            var model =
+         await (from book in _context.Books
+                join category in _context.Categories on book.CategoryId equals category.Id
+                where book.Id == id.Value
+                select new SearchBookViewModel
+                {
+                    Id = book.Id,
+                    CategoryName = category.NameToken,
+                    ISBN = book.ISBN,
+                    Title = book.Title,
+                    Author = book.Author,
+                    CreatedDate = book.CreatedDate.ToShortDateString(),
+                    LastUpdatedDate = book.LastUpdatedDate.ToShortDateString(),
+                    Status = book.Status
+                }).FirstOrDefaultAsync();
+
+            if (model == null)
             {
                 return NotFound();
             }
 
-            return View(book);
+            return View(model);
         }
 
         // POST: Book/Delete/5
@@ -197,67 +280,6 @@ namespace BookTracker.Controllers
         }
 
 
-        #region Create Book
-
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            var model = new AddEditBookViewModel();
-            try
-            {
-                var bookCategorySelectListItems = await CategorySelectListAsync();
-                model.CategorySelectList = bookCategorySelectListItems;
-                model.CreatedDate = DateTime.Now;
-                model.LastUpdatedDate = DateTime.Now;
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                //TODO Do something with ex
-
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddEditBookViewModel model )
-        {
-            //model.CategorySelectList = await _categoryManager.GetBookCategorySelectListItemsAsync();
-            model.CategorySelectList = await CategorySelectListAsync();
-            //if (ModelState.IsValid)
-            //{
-            var book = new Book
-            {
-            ISBN = model.ISBN,
-            Author = model.Author,
-            CategoryId = model.CategoryId,
-            Title = model.Title,
-            CreatedDate = DateTime.Now,
-            LastUpdatedDate = DateTime.Now,
-            Status = TrackingStatus.Started.ToString() //TODO Started.GetDescription
-        };
-            //TODO The below method could be extracted into a new class Book Manager. Implement this once you learn inecting context into class.
-
-            //var response = await _bookManager.InsertAsync(book);
-            //if (response)
-            try
-            {
-                _context.Add(book);
-                var sth = book;
-                var response = await _context.SaveChangesAsync();
-                if (response != null)
-                   return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                var sth = ex.Message;
-            }
-            //return RedirectToAction(nameof(Index));
-            //else 
-            //}
-            return View(model);
-        }
 
         private async Task<IEnumerable<SelectListItem>> CategorySelectListAsync()
         {
@@ -281,99 +303,13 @@ namespace BookTracker.Controllers
             }
             catch (Exception ex)
             {
-                var sth = ex.Message; //TODO do sth with exception, either log or something.  
+                var sth = ex.Message;
+                Console.WriteLine(ex.Message); //TODO do sth with exception, either log or something.  
                 return categorySelectListItems;
             }
         }
-        #endregion
 
-        #region Edit
-
-
-        // GET: Book/Edit/5
-        [HttpGet]
-        public async Task<IActionResult>EditBook(int? id)
-        {
-            if (id == null)
-                return NotFound();
-            
-
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
-                return NotFound();
-            
-            var model = new AddEditBookViewModel();
-
-            try
-            {
-                var bookCategorySelectListItems = await CategorySelectListAsync();
-                model.CategorySelectList = bookCategorySelectListItems;
-                model.Id = book.Id;
-                model.ISBN = book.ISBN;
-                model.Author = book.Author;
-                model.Title = book.Title;
-                model.Status = TrackingStatus.Started;//TODO book.Status huna parcha . 
-                model.CreatedDate = book.CreatedDate;
-                model.LastUpdatedDate = book.LastUpdatedDate;
-                return View("Create", model);
-            }
-            catch (Exception ex)
-            {
-                //TODO Do something with ex
-
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
-        // POST: Book/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBook(AddEditBookViewModel model)
-        {
-            if (model.Id == null)
-                return NotFound();
-
-            var editBook = await _context.Books.FindAsync(model.Id);
-            if (editBook == null)
-                return NotFound();
-
-            model.CategorySelectList = await CategorySelectListAsync();
-
-            if (ModelState.IsValid)
-            {
-
-                try
-                {
-                    editBook.LastUpdatedDate = DateTime.Now;
-                    editBook.Status = model.Status.ToString();
-                    
-                    _context.Update(editBook);
-                    await _context.SaveChangesAsync();
-
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookExists(editBook.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View("Create",model); 
-        }
-
-
-
-
-
-        #endregion
+        
 
 
         #region helper methods
@@ -389,7 +325,30 @@ namespace BookTracker.Controllers
 
             return value.ToString();
         }
-    
+
+
+        //returns Book Status drop down list item using book status enum types
+        public IEnumerable<SelectListItem> GetBookStatusSelectList()
+    {
+        var bookStatusSelectListItems = new List<SelectListItem>();
+
+        var bookStatusEnums = Enum.GetValues(typeof(TrackingStatus)).Cast<TrackingStatus>();
+
+        foreach (var item in bookStatusEnums)
+        {
+            bookStatusSelectListItems.Add(new SelectListItem
+            {
+                Text = (item).ToString(),
+                Value = (item).ToString()
+            });
+        }
+
+
+        return bookStatusSelectListItems;
+    }
+
+
+
     #endregion
 
 }

@@ -1,48 +1,55 @@
-@model BookTracker.Entities.Category
+@model BookTracker.Models.AddEditCategoryViewModel
 
-@{
-    Layout = null;
-}
+@using (Html.BeginForm("Create", "Category", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
 
-<!DOCTYPE html>
+    <div class="form-horizontal">
+        <div>
+            <a href="@Url.Action("Index","Category")" class="btn btn-primary btn-sm">
+                <i class="fa fa-angle-left"></i>
+                <span style="font-weight:bold; text-transform:uppercase;">
+                    Back To Categories
+                </span>
+            </a>
+            <h4 class="text-center">
+                Create new category
+            </h4>
+        </div>
+        <hr />
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Create</title>
-</head>
-<body>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CategoryTypeId" class="control-label"></label>
-                <select asp-for="CategoryTypeId" class ="form-control" asp-items="ViewBag.CategoryTypeId"></select>
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="NameToken">Name</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CategoryTypeId" class="control-label"></label>
+                        <div>
+
+                            @Html.DropDownListFor(p => p.CategoryTypeId, Model.CategoryTypeSelectList, "Please select a Category Type",
+                                          new { @class = "form-control" })
+
+                            @Html.ValidationMessageFor(m => m.CategoryTypeId, "",
+                                          new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-success" style="margin-top: 15px; margin-bottom: 15px;" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="NameToken" class="control-label"></label>
-                <input asp-for="NameToken" class="form-control" />
-                <span asp-validation-for="NameToken" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-</body>
-</html>
+        }

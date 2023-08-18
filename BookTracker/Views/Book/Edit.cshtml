@@ -1,70 +1,101 @@
-@model BookTracker.Entities.Book
+@*@model BookTracker.Entities.Book*@
+@model BookTracker.Models.AddEditBookViewModel
 
-@{
-//Layout = "_Layout";
+
+@using (Html.BeginForm("Edit", "Book", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div>
+            <a href="@Url.Action("Index","Book")" class="btn btn-primary btn-sm">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                <span style="font-weight:bold; text-transform:uppercase;">
+                    Back To Books
+                </span>
+            </a>
+            <h4 class="text-center">Edit<span class="font-italic"> @(Model.Id != null ? Model.Title : "")</span></h4>
+        </div>
+        <hr />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => Model.Id)
+        @Html.HiddenFor(model => Model.BookStatus)
+
+
+        <div class="form-group">
+            <label asp-for="ISBN" class="control-label"></label>
+            <input asp-for="ISBN" class="form-control" readonly />
+            <span asp-validation-for="ISBN" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" readonly />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Author" class="control-label"></label>
+            <input asp-for="Author" class="form-control" readonly />
+            <span asp-validation-for="Author" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CategoryId" class="control-label"></label>
+            <div>
+                @Html.DropDownListFor(p => p.CategoryId, Model.CategorySelectList,
+            "Please select a Category", new { @class = "form-control", @disabled = "disabled" })
+
+                @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="BookStatus" class="control-label"></label>
+
+            <div>
+                @Html.DropDownListFor(p => p.BookStatus, Model.BookStatusSelectListItems,
+            "Please select a Book Status", new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(m => m.BookStatus, "", new { @class = "text-danger" })
+            </div>
+
+            <span asp-validation-for="BookStatus" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mt-4">
+            <input type="submit" value="Update" class="btn btn-success" />
+        </div>
+
+    </div>
+
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
 
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ISBN" class="control-label"></label>
-                <input asp-for="ISBN" class="form-control" />
-                <span asp-validation-for="ISBN" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author" class="control-label"></label>
-                <input asp-for="Author" class="form-control" />
-                <span asp-validation-for="Author" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastUpdatedDate" class="control-label"></label>
-                <input asp-for="LastUpdatedDate" class="form-control" />
-                <span asp-validation-for="LastUpdatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
-</body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

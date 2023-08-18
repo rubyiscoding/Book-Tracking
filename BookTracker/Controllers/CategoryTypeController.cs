@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookTracker.Data;
 using BookTracker.Entities;
+using BookTracker.Models;
 
 namespace BookTracker.Controllers
 {
@@ -46,7 +47,8 @@ namespace BookTracker.Controllers
         // GET: CategoryType/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AddEditCategoryTypeViewModel();
+            return View(model);
         }
 
         // POST: CategoryType/Create
@@ -54,15 +56,22 @@ namespace BookTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryTypeId,NameToken,Description")] Category category)
+        public async Task<IActionResult> Create(AddEditCategoryTypeViewModel model)
+            
         {
-            if (ModelState.IsValid)
+            var category = new CategoryType()
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
+                Name= model.Name
+            };
+            
+            _context.Add(category);
+            var response = await _context.SaveChangesAsync();
+            if (response != null)
+            {
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(model);
+           
         }
 
         // GET: CategoryType/Edit/5
@@ -78,7 +87,11 @@ namespace BookTracker.Controllers
             {
                 return NotFound();
             }
-            return View(category);
+            var model = new AddEditCategoryTypeViewModel
+            {
+                Name = category.NameToken
+            };
+            return View(model);
         }
 
         // POST: CategoryType/Edit/5
@@ -86,19 +99,28 @@ namespace BookTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategoryTypeId,NameToken,Description")] Category category)
+        public async Task<IActionResult> Edit(AddEditCategoryTypeViewModel model)
+            
         {
-            if (id != category.Id)
+            if (model.Id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var category = await _context.Categories.FindAsync(model.Id);
+            if (category == null)
             {
-                try
+                return NotFound();
+            }
+           
+
+            try
                 {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
+                category.NameToken = model.Name;
+                
+                 _context.Update(category);
+                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -110,10 +132,7 @@ namespace BookTracker.Controllers
                     {
                         throw;
                     }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            return View(category);
         }
 
         // GET: CategoryType/Delete/5
