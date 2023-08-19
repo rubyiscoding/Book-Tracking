@@ -12,6 +12,7 @@ This application allows users to track the book information and update the track
 2. I wanted to implement dependency injection by segregating the database access logic into the manager classes, but i was unable to inject db context. However, I have left the Manager classes in the project itself so that I can work on it later in the future.
 3. Scaffolding views that the editor created for SelectListItems didnt work for me as it was not passing the value of the dropdown list. However, I have implemented a workaround for that.
 4. I followed the instructions provided during the class to implement the database and entities. I was able to create the migration scripts and successfully update the database with the created migration scripts.
+5. fontawesome icons sometimes doesnt work on my system. I am not sure what is causing that. Sometimes it gets displayed and sometimes it doesnt. It could be because of caches.
 
 # Screenshots of Books UI
 
@@ -49,5 +50,23 @@ This application allows users to track the book information and update the track
 
 ## Book Category's Delete Page
 <img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/5efda78d-303c-4a9e-ad1b-ed10ef22af5b">
+
+# Screenshots of Book Category Types UI
+
+## Book Category Types Index Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/fa6b919c-a1fd-4a62-b4a6-9ea6882f6807">
+
+## Book Category Types Create Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/401e4b36-c518-4a74-b74b-7f6453ed2ea7">
+
+## Book Category Types Edit Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/5f75913e-91a4-4d52-85ce-c97179085891">
+
+## Book Category Types Details Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/31aca61c-e9eb-42a3-bf57-301c5acb8ad7">
+
+## Book Category Types Delete Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/9e3ec5c7-7752-4315-9379-4b0cb2fc77e2">
+
 
 
