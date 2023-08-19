@@ -72,7 +72,7 @@ This application allows users to track the book information and update the track
 
 ## Lessons learnt 
 
-* Using Visual Studio Scaffolding helps create controllers and views based on model provided and db context.
+* Using Visual Studio Scaffolding helps implement the CRUD operations on controllers. It generates views based on the model and db context     provided.
 * Being a newbie, vscode is a pain, I am unable to use shortcuts of Visual Studio 2022, I prefer Visual Studio.
 * We can implement dependency injection by injecting the Manager or manager classes, DAL classes in Program.cs class in this way:
   builder.Services.AddSingleton<ICategoryManager, CategoryManager>();
@@ -82,4 +82,11 @@ This application allows users to track the book information and update the track
 * We can also specify other database types like options.UseSqlServer(....)
 * In order to build a Dropdown list in MVC razor view, we can pass the data in SelectListItem datatype. However, their are also other ways     such as adding data into ViewBag(), ViewData[].
 * We can inject db context into controllers' constructor method.
-* I found Bootstrap classes to be easy and sleek to learn and implement. 
+* I found Bootstrap classes to be easy and sleek to learn and implement.
+
+  ## Credit
+
+  * Professor Brent Richie
+  * Class Recordings
+  * Stack Overflow
+  * MSDN Documentation
