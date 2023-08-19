@@ -1,39 +1,36 @@
-@model BookTracker.Entities.Category
-
-@*@{
-    Layout = null;
-}
-*@
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
+@model BookTracker.Models.AddEditCategoryTypeViewModel
 
 <div>
-    <h4>Category</h4>
+
+    <div>
+        <a href="@Url.Action("Index", "CategoryType")" class="btn btn-primary btn-sm">
+            <i class="fa fa-angle-left"></i>
+            <span style="font-weight:bold; text-transform:uppercase;">
+                Back To Category Types
+            </span>
+        </a>
+        <h4 class="text-center">
+            Details of @Model.Name
+        </h4>
+    </div>
+
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NameToken)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NameToken)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+   
+    <a href="@Url.Action("Edit", "CategoryType", new RouteValueDictionary(new { id = Model.Id }))" class="btn btn-success btn-sm" style="margin-top: 15px; margin-bottom:15px;">
+        <span style="font-weight:bold; text-transform:uppercase;">
+            Edit Category Type
+        </span>
+    </a>
+
 </div>
-</body>
-</html>
+

@@ -20,28 +20,32 @@ namespace BookTracker.Controllers
             _context = context;
         }
 
-        // GET: CategoryType
+        // GET: CategoryTypes 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            var model = await (from categoryType in _context.CategoryTypes
+                               select new AddEditCategoryTypeViewModel
+                               {
+                                   Id = categoryType.Id,
+                                   Name = categoryType.Name
+                               }).ToListAsync();
+            return View(model);
         }
 
         // GET: CategoryType/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
+            var categoryType = await _context.CategoryTypes.FirstOrDefaultAsync(m => m.Id == id);
+            if (categoryType == null)
                 return NotFound();
-            }
 
-            return View(category);
+            var model = new AddEditCategoryTypeViewModel { Name = categoryType.Name,
+            Id= categoryType.Id
+            };
+            return View(model);
         }
 
         // GET: CategoryType/Create
@@ -57,13 +61,10 @@ namespace BookTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddEditCategoryTypeViewModel model)
-            
+
         {
-            var category = new CategoryType()
-            {
-                Name= model.Name
-            };
-            
+            var category = new CategoryType { Name = model.Name };
+
             _context.Add(category);
             var response = await _context.SaveChangesAsync();
             if (response != null)
@@ -71,26 +72,25 @@ namespace BookTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
-           
+
         }
 
         // GET: CategoryType/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
+            var categoryType = await _context.CategoryTypes.FindAsync(id);
+            if (categoryType == null)
                 return NotFound();
-            }
             var model = new AddEditCategoryTypeViewModel
             {
-                Name = category.NameToken
+                Id = categoryType.Id,
+                Name = categoryType.Name
             };
+
             return View(model);
         }
 
@@ -100,38 +100,26 @@ namespace BookTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(AddEditCategoryTypeViewModel model)
-            
         {
             if (model.Id == null)
-            {
                 return NotFound();
-            }
 
-            var category = await _context.Categories.FindAsync(model.Id);
-            if (category == null)
-            {
+            var categoryType = await _context.CategoryTypes.FindAsync(model.Id);
+            if (categoryType == null)
                 return NotFound();
-            }
-           
+
 
             try
-                {
-                category.NameToken = model.Name;
-                
-                 _context.Update(category);
-                 await _context.SaveChangesAsync();
+            {
+                categoryType.Name = model.Name;
+
+                _context.Update(categoryType);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return NotFound();
             }
         }
 
@@ -139,18 +127,20 @@ namespace BookTracker.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
+            var categoryType = await _context.CategoryTypes.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (categoryType == null)
                 return NotFound();
-            }
 
-            return View(category);
+            var model = new AddEditCategoryTypeViewModel
+            {
+                Id = categoryType.Id,
+                Name = categoryType.Name
+            };
+
+            return View(model);
         }
 
         // POST: CategoryType/Delete/5
@@ -158,15 +148,12 @@ namespace BookTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            _context.Categories.Remove(category);
+            var categoryType = await _context.CategoryTypes.FindAsync(id);
+            _context.CategoryTypes.Remove(categoryType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
-        {
-            return _context.Categories.Any(e => e.Id == id);
-        }
+
     }
 }
