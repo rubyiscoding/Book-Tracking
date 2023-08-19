@@ -18,3 +18,17 @@ This application allows users to track the book information and update the track
 ## Landing Page
 <img width="1440" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/001b2316-5168-4c11-8d61-2f0669199582">
 
+## Book's Index Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/41225d01-b70e-4070-8f8f-024483022cdc">
+
+## Book's Create Page
+![image](https://github.com/rubyiscoding/Book-Tracking/assets/74127503/17506d93-b869-48a5-a7dd-d7ec34fe0ba2)
+
+## Book's Edit Page 
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/2d694397-950d-4f26-aaaf-7784a50b9780">
+
+## Book's Details Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/41fa82b2-f00a-4da4-99c3-41f7a698cc25">
+
+
+
