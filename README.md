@@ -30,5 +30,8 @@ This application allows users to track the book information and update the track
 ## Book's Details Page
 <img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/41fa82b2-f00a-4da4-99c3-41f7a698cc25">
 
+## Book's Delete Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/4298c85a-6c34-49d7-b677-4065894f5e30">
+
 
 
