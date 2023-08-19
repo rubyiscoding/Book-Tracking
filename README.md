@@ -13,6 +13,7 @@ This application allows users to track the book information and update the track
 3. Scaffolding views that the editor created for SelectListItems didnt work for me as it was not passing the value of the dropdown list. However, I have implemented a workaround for that.
 4. I followed the instructions provided during the class to implement the database and entities. I was able to create the migration scripts and successfully update the database with the created migration scripts.
 5. fontawesome icons sometimes doesnt work on my system. I am not sure what is causing that. Sometimes it gets displayed and sometimes it doesnt. It could be because of caches.
+6. I did not get a chance to implement the unit test for the controllers. (ran out of time)
 
 # Screenshots of Books UI
 
@@ -68,5 +69,16 @@ This application allows users to track the book information and update the track
 ## Book Category Types Delete Page
 <img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/9e3ec5c7-7752-4315-9379-4b0cb2fc77e2">
 
+## Lessons learnt 
 
-
+* Using Visual Studio Scaffolding helps create controllers and views based on model provided and db context.
+* Being a newbie, vscode is a pain, I am unable to use shortcuts of Visual Studio 2022, I prefer Visual Studio.
+* We can implement dependency injection by injecting the Manager or manager classes, DAL classes in Program.cs class in this way:
+  builder.Services.AddSingleton<ICategoryManager, CategoryManager>();
+* We can specify the application to use Sqlite db by using the code below in Program.cs class:
+        builder.Services.AddDbContext<BookTrackerContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+* We can also specify other database types like options.UseSqlServer(....)
+* In order to build a Dropdown list in MVC razor view, we can pass the data in SelectListItem datatype. However, their are also other ways     such as adding data into ViewBag(), ViewData[].
+* We can inject db context into controllers' constructor method.
+* I found Bootstrap classes to be easy and sleek to learn and implement. 
