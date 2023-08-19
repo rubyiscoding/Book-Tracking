@@ -13,7 +13,7 @@ This application allows users to track the book information and update the track
 3. Scaffolding views that the editor created for SelectListItems didnt work for me as it was not passing the value of the dropdown list. However, I have implemented a workaround for that.
 4. I followed the instructions provided during the class to implement the database and entities. I was able to create the migration scripts and successfully update the database with the created migration scripts.
 
-# Screenshots of the UI
+# Screenshots of Books UI
 
 ## Landing Page
 <img width="1440" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/001b2316-5168-4c11-8d61-2f0669199582">
@@ -33,5 +33,21 @@ This application allows users to track the book information and update the track
 ## Book's Delete Page
 <img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/4298c85a-6c34-49d7-b677-4065894f5e30">
 
+# Screenshots of Book Categories UI
+
+## Book Category's Index Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/27cd9e94-76a4-4e3e-847a-a7d6341cfc4d">
+
+## Book Category's Create Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/66b24c5f-ad74-4530-8ea8-e9ea43d57fa5">
+
+## Book Category's Edit Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/8cb266f2-17a3-4c45-9739-a1592414a369">
+
+## Book Category's Details Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/54096095-477c-4caa-b020-3659bb20554c">
+
+## Book Category's Delete Page
+<img width="1435" alt="image" src="https://github.com/rubyiscoding/Book-Tracking/assets/74127503/5efda78d-303c-4a9e-ad1b-ed10ef22af5b">
 
 
