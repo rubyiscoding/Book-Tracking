@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "eDLJIlVYHGKuMw8P+z/Xt+HfbXywhQ2JM9BGn2Bz28c=",
+  "Hash": "6HBA0kZHLXTVf4THfOfx8dES1PR/LHbHk95oztKZw7c=",
   "Source": "BookTracker",
   "BasePath": "_content/BookTracker",
   "Mode": "Default",
@@ -848,6 +848,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map"
+    },
+    {
+      "Identity": "/Users/pinkzen/BookTracking/BookTracker/wwwroot/lib/bootstrap/dist/js/popper.js",
+      "SourceId": "BookTracker",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/pinkzen/BookTracking/BookTracker/wwwroot/",
+      "BasePath": "_content/BookTracker",
+      "RelativePath": "lib/bootstrap/dist/js/popper.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/lib/bootstrap/dist/js/popper.js"
     },
     {
       "Identity": "/Users/pinkzen/BookTracking/BookTracker/wwwroot/lib/bootstrap/LICENSE",
