@@ -23,44 +23,63 @@ namespace BookTracker.Controllers
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            var model = await (from category in _context.Categories
+                               join categoryType in _context.CategoryTypes on category.CategoryTypeId equals categoryType.Id
+                               select new SearchCategoryViewModel
+                               {
+                                   Id = category.Id,
+                                   CategoryTypeName = categoryType.Name,
+                                   Name = category.NameToken,
+                                   Description = category.Description
+                               }).ToListAsync();
+
+            return View(model);
         }
 
         // GET: Category/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            try
             {
-                return NotFound();
-            }
+                var model = await (from category in _context.Categories
+                                   join categoryType in _context.CategoryTypes on category.CategoryTypeId equals categoryType.Id
+                                   where category.Id == id.Value
+                                   select new SearchCategoryViewModel
+                                   {
+                                       Id = category.Id,
+                                       CategoryTypeName = categoryType.Name,
+                                       Name = category.NameToken,
+                                       Description = category.Description
+                                   }).FirstOrDefaultAsync();
+                if (model == null)
+                    return NotFound();
 
-            return View(category);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // TODO : do sth with the ex
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: Category/Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var model = new AddEditCategoryViewModel();
             try
             {
-                var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
-                
-                model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
-                
+                var model = new AddEditCategoryViewModel();
+                model.CategoryTypeSelectList = await CategoryTypeSelectListAsync(); // populate the DDL
+
                 return View(model);
             }
             catch (Exception ex)
             {
                 //TODO Do something with ex
-
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -73,34 +92,30 @@ namespace BookTracker.Controllers
         public async Task<IActionResult> Create(AddEditCategoryViewModel model)
         {
             var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
-
             model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
 
-            
-                var category = new Category { NameToken= model.Name, Description= model.Description, CategoryTypeId= model.CategoryTypeId };
+      
+                var category = new Category { NameToken = model.Name, Description = model.Description, CategoryTypeId = model.CategoryTypeId };
                 _context.Add(category);
                 var response = await _context.SaveChangesAsync();
-            if (response != null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-              
+                if (response > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            
+
             return View(model);
         }
 
         // GET: Category/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
+            if (!id.HasValue || id == null)
                 return NotFound();
-            }
 
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
-            {
                 return NotFound();
-            }
 
             var model = new AddEditCategoryViewModel();
             var bookCategoryTypeSelectListItems = await CategoryTypeSelectListAsync();
@@ -120,7 +135,6 @@ namespace BookTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(AddEditCategoryViewModel model)
-         
         {
             if (model.Id == null)
             {
@@ -136,12 +150,18 @@ namespace BookTracker.Controllers
 
             model.CategoryTypeSelectList = bookCategoryTypeSelectListItems;
 
-                editCategory.NameToken = model.Name;
-                editCategory.Description = model.Description;
-                editCategory.CategoryTypeId = model.CategoryTypeId;
+            editCategory.NameToken = model.Name;
+            editCategory.Description = model.Description;
+            editCategory.CategoryTypeId = model.CategoryTypeId;
 
             _context.Update(editCategory);
-            await _context.SaveChangesAsync();
+            
+
+            var response = await _context.SaveChangesAsync();
+            if (response>0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(model);
         }
@@ -154,24 +174,21 @@ namespace BookTracker.Controllers
                 return NotFound();
             }
 
-            var model =
-         await (from category in _context.Categories
-                join categoryType in _context.CategoryTypes on category.CategoryTypeId equals categoryType.Id
-                where category.Id == id.Value
-                select new SearchCategoryViewModel
-                {
-                    Id = category.Id,
-                    Name = category.NameToken,
-                    Description = category.Description,
-                    CategoryTypeName = categoryType.Name
-                }).FirstOrDefaultAsync();
+            var model = await (from category in _context.Categories
+                               join categoryType in _context.CategoryTypes on category.CategoryTypeId equals categoryType.Id
+                               where category.Id == id.Value
+                               select new SearchCategoryViewModel
+                               {
+                                   Id = category.Id,
+                                   Name = category.NameToken,
+                                   Description = category.Description,
+                                   CategoryTypeName = categoryType.Name
+                               }).FirstOrDefaultAsync();
 
-           
+
             if (model == null)
-            {
                 return NotFound();
-            }
-          
+
             return View(model);
         }
 
@@ -233,6 +250,10 @@ namespace BookTracker.Controllers
         #endregion
 
 
+        /// <summary>
+        /// Returns SelectList for CategoryType from db
+        /// </summary>
+        /// <returns>Ienum of selectlistItem, usaage: in DDL</returns>
         private async Task<IEnumerable<SelectListItem>> CategoryTypeSelectListAsync()
         {
             var categoryTypeSelectListItems = new List<SelectListItem>();
