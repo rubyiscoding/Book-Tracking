@@ -4,8 +4,9 @@ This application allows users to track the book information and update the track
 1. First, the user has to add the book that they would like to track. Initially the added book will be in Started status.
 2. The users can update the book's status as : In Progress(if the user is still reading the book), Completed (if the user has completed reading the book), Got Bored and Quit(if the user gets bored while reading and quits).
 3. This application has the functionality of adding categories and category types. However, this information should only be visible to the admin. Since Admin page is out of scope, we have set the visibility for categories and category types to the users.
-4. Users can also add, edit, delete and view details of categories.
-5. Users can also add, edit, delete and view details of category types.
+4. Users can also add, edit, delete and view details of Books.
+5. Users can also add, edit, delete and view details of Categories.
+6. Users can also add, edit, delete and view details of Category Types.
 
 # Impediments
 1. Using scaffolding in creation of controllers and views did not work initially as some of the packages didnt work. However, after thorough research, I was able to scaffold the controllers, controller methods and views.
